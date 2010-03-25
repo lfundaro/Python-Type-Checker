@@ -8,7 +8,7 @@
 ###############################################
 class Expresiones(object):
     def __init__(self):
-        self.nombre = 'Expresion'
+        self.nombre = 'expresion'
 
 class Entero(Expresiones):
     def __init__(self):
