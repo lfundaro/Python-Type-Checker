@@ -30,3 +30,32 @@ def sustituir(par, T):
 def match(val1, val2):
     return val1 == val2
 
+def not_member(var_tipo, s1):
+    for par in s1:
+        if var_tipo == par[0]:
+            return False
+        
+    return True
+
+def composicion(s1, s2):
+    resultado = []
+    # Por cada par (x1,T1) de s1
+    # se hace (x1, sustitucion(s2,T1)
+    for par in s1:
+        resultado.append((par[0], sustitucion(s2, par[1])))
+
+    # Se agregan los pares (x2,T2) tal que no este en s2
+    for par in s2:
+        if not_member(par[0], s1):
+            resultado.append((par[0], par[1]))
+
+    return resultado
+
+
+
+            
+        
+        
+    
+
+
