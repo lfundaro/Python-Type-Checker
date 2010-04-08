@@ -30,3 +30,12 @@ def sustituir(par, T):
 def match(val1, val2):
     return val1 == val2
 
+def unif(t1,t2):
+	if isinstace(t1, Valor_tipo) and isinstance(t2,Valor_tipo):
+		A = t1.valor
+		B = t2.valor
+		if A == B return True
+		return False 
+		
+		
+	
