@@ -54,10 +54,10 @@ def componer(s1, s2):
 def unif(tipo1, tipo2):
 	
     # tipo1 entre parentesis.
-    if isinstance(tipo1, Tipo_Parent): return unif(tipo1.T1,tipo2)
+    if isinstance(tipo1, Tipo_parent): return unif(tipo1.T1,tipo2)
 	
     # tipo2 entre parentesis.
-    if isinstance(tipo2, Tipo_Parent): return unif(tipo1,tipo2.T1)
+    if isinstance(tipo2, Tipo_parent): return unif(tipo1,tipo2.T1)
     
     # tipo1 es variable.
     if isinstance(tipo1, Var_tipo):
