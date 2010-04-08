@@ -52,49 +52,49 @@ def componer(s1, s2):
     return resultado
 
 def unif(tipo1, tipo2):
-    if isinstance(tipo1, Tipo_Funcion) and isinstance(tipo2, Tipo_Funcion):
-        w = unif(tipo1.T1, tipo2.T1)
-        resultado = componer([w], unif(sustituir([w], tipo1.T2), sustituir([w], tipo2.T2)))
-        return resultado
-
-    elif isinstance(tipo1, Tipo_Funcion) and isinstance(tipo2, Var_tipo):
-        return unif(tipo2, tipo1)
-
-    elif isinstance(tipo1, Var_tipo): 
+	
+    # tipo1 entre parentesis.
+	if isinstance(tipo1, Tipo_Parent): return unif(tipo1.T1,tipo2)
+	
+    # tipo2 entre parentesis.
+	if isinstance(tipo2, Tipo_Parent): return unif(tipo1,tipo2.T1)
+	
+    # tipo1 es variable.
+	if isinstance(tipo1, Var_tipo):
+		# tipo2 es una funcion.
         if isinstance(tipo2, Tipo_Funcion):
             if tipo1.valor == tipo2.T1.valor:
                 return 'Error'
             else:
                 return [(tipo1, tipo2)]
+		# tipo2 es una variable.
         elif isinstance(tipo2, Var_tipo):
             if tipo1.valor == tipo2.valor:
                 return ()
             else:
                 return (tipo1, tipo2)
-        elif isinstance(tipo2, Int):
-            return [(tipo1, tipo2)]
-        elif isinstance(tipo2, Bool):
-            return [(tipo1, tipo2)]
-        elif isinstance(tipo2, Tipo_parent):
-            return unif(tipo1, tipo2.T1)
+		# tipo2 es un entero o booleano.
+        else: return [(tipo1, tipo2)]
         
-def asigTipo(Amb, E, T):
-    if isinstance(E, Entero):
-        return unif(T, Int())
-    elif isinstance(E, Booleano):
-        return unif(T, Bool())
-    # elif isinstance(E, Var):
-    #     return unif(T, Amb(E))
-    
-    # Hay que preguntarle a guillermo o 
-    # ascander si el ambiente se puede manejar 
-    # como un diccionario 
+	# tipo1 es un entero, unifica consigo mismo.
+	if isinstance(tipo1,Int):
+        if isinstance(tipo2,Int) and tipo1.valor == tipo2.valor: return []
+            else: return 'Error'
+        else: return 'Error'
 
-
-            
-        
-        
-    
-
-
->>>>>>> ab0cd2bab1c65959a86434d9a51dfc9b65481122
+	# tipo1 es un booleano, unifica consigo mismo
+    if isinstance(tipo1,Bool):
+        if isinstance(tipo2,Bool) and tipo1.valor == tipo2.valor: return []
+            else: return 'Error'
+        else: return 'Error'
+	
+	# tipo1 es una funcion y tipo2 es una funcion.
+    if isinstance(tipo1, Tipo_Funcion) 
+		if isinstance(tipo2, Tipo_Funcion):
+			w = unif(tipo1.T1, tipo2.T1)
+			resultado = componer([w], unif(sustituir([w], tipo1.T2), sustituir([w], tipo2.T2)))
+			return resultado
+		elif isinstance(tipo2, Var_tipo):
+			return unif(tipo2, tipo1)
+		elif isinstance(tipo2, Bool) or isinstance(tipo2,Int):
+			return unif(tipo2,tipo1)
