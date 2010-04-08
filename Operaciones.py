@@ -37,7 +37,7 @@ def not_member(var_tipo, s1):
         
     return True
 
-def composicion(s1, s2):
+def componer(s1, s2):
     resultado = []
     # Por cada par (x1,T1) de s1
     # se hace (x1, sustituir(s2,T1)
@@ -54,7 +54,7 @@ def composicion(s1, s2):
 def unif(tipo1, tipo2):
     if isinstance(tipo1, Tipo_Funcion) and isinstance(tipo2, Tipo_Funcion):
         w = unif(tipo1.T1, tipo2.T1)
-        resultado = composicion([w], unif(sustituir([w], tipo1.T2), sustituir([w], tipo2.T2)))
+        resultado = componer([w], unif(sustituir([w], tipo1.T2), sustituir([w], tipo2.T2)))
         return resultado
 
     elif isinstance(tipo1, Tipo_Funcion) and isinstance(tipo2, Var_tipo):
