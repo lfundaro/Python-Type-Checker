@@ -51,27 +51,44 @@ def composicion(s1, s2):
 
     return resultado
 
-
 def unif(tipo1, tipo2):
     if isinstance(tipo1, Tipo_Funcion) and isinstance(tipo2, Tipo_Funcion):
         w = unif(tipo1.T1, tipo2.T1)
         resultado = composicion([w], unif(sustituir([w], tipo1.T2), sustituir([w], tipo2.T2)))
         return resultado
-    elif isinstance(tipo1, Var_tipo) and isinstance(tipo2, Tipo_Funcion):
-        if tipo1.valor == tipo2.T1.valor:
-            return 'Error'
-        else:
-            return [(tipo1, tipo2)]
+
     elif isinstance(tipo1, Tipo_Funcion) and isinstance(tipo2, Var_tipo):
-        resultado = unif(tipo2, tipo1)
-        return resultado
-    elif isinstance(tipo1, Var_tipo) and isinstance(tipo1, Var_tipo):
-        if tipo1.valor == tipo2.valor:
-            return ()
-        else:
-            return (tipo1, tipo2)
+        return unif(tipo2, tipo1)
 
-
+    elif isinstance(tipo1, Var_tipo): 
+        if isinstance(tipo2, Tipo_Funcion):
+            if tipo1.valor == tipo2.T1.valor:
+                return 'Error'
+            else:
+                return [(tipo1, tipo2)]
+        elif isinstance(tipo2, Var_tipo):
+            if tipo1.valor == tipo2.valor:
+                return ()
+            else:
+                return (tipo1, tipo2)
+        elif isinstance(tipo2, Int):
+            return [(tipo1, tipo2)]
+        elif isinstance(tipo2, Bool):
+            return [(tipo1, tipo2)]
+        elif isinstance(tipo2, Tipo_parent):
+            return unif(tipo1, tipo2.T1)
+        
+def asigTipo(Amb, E, T):
+    if isinstance(E, Entero):
+        return unif(T, Int())
+    elif isinstance(E, Booleano):
+        return unif(T, Bool())
+    # elif isinstance(E, Var):
+    #     return unif(T, Amb(E))
+    
+    # Hay que preguntarle a guillermo o 
+    # ascander si el ambiente se puede manejar 
+    # como un diccionario 
 
 
             
