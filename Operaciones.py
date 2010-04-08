@@ -77,19 +77,35 @@ def unif(tipo1, tipo2):
             return [(tipo1, tipo2)]
         elif isinstance(tipo2, Tipo_parent):
             return unif(tipo1, tipo2.T1)
-        
+
+    elif isinstance(tipo1, Int):
+        if isinstance(tipo2, Int):
+            return [(tipo1,tipo2)]
+
+
+def lookup(lista, elem):
+    for i in lista:
+        if i[0].valor == elem:
+            return i[1]
+
+    return 'Ambiente vacio'
+
+
 def asigTipo(Amb, E, T):
     if isinstance(E, Entero):
         return unif(T, Int())
     elif isinstance(E, Booleano):
         return unif(T, Bool())
-    # elif isinstance(E, Var):
-    #     return unif(T, Amb(E))
-    
-    # Hay que preguntarle a guillermo o 
-    # ascander si el ambiente se puede manejar 
-    # como un diccionario 
-
+    elif isinstance(E, Var):
+        print 'hola'
+        r = lookup(Amb,E)
+        return unif(T, r)
+    elif isinstance(E, Suma):
+        s1 = asigTipo(Amb, E.Exp1, Int())
+        print s1
+        return ''
+#        s2 = componer(s1, asigTipo(Amb, E.Exp2, Int()))
+ #       return componer(s2, unif(T, int()))
 
             
         
