@@ -117,6 +117,22 @@ def asigTipo(Amb, E, T):
         s1 = asigTipo(Amb, E.Exp1, Int())
         s2 = componer(s1, asigTipo(Amb, E.Exp2, Int()))
         return componer(s2, unif(T, Int()))
+    elif isinstance(E, Menor):
+        s1 = asigTipo(Amb, E.Exp1, Int())
+        s2 = componer(s1, asigTipo(Amb, E.Exp2, Int()))
+        return componer(s2, unif(T, Bool()))
+    elif isinstance(E, Conjuncion):
+        s1 = asigTipo(Amb, E.Exp1, Bool())
+        s2 = componer(s1, asigTipo(Amb, E.Exp2, Bool()))
+        return componer(s2, unif(T, Bool()))
+    elif isinstance(E, Lambda):
+        Amb1 = extender((Var('x'), Var_tipo('a')), Amb)
+        a = Var_tipo('a')
+        b = Var_tipo('b')
+        s1 = asigTipo(Amb1, E, b)
+        return componer(s1, unif(T, sustituir(s1, Tipo_Funcion(Var_tipo('a'), Var_tipo('b')))))
+    elif isinstance(E, Aplicar):
+        a = Var_tipo('a')
+        s1 = asigTipo(Amb, E.Exp2, a)
+        return componer(s1, asigTipo(Amb, E.Exp1, sustituir(s1, Tipo_Funcion(a, T))))
 
-            
-        
