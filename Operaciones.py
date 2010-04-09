@@ -63,10 +63,7 @@ def unif(tipo1, tipo2):
     if isinstance(tipo1, Var_tipo):
         # tipo2 es una funcion.
         if isinstance(tipo2, Tipo_Funcion):
-            if tipo1.valor == tipo2.T1.valor:
-                return 'Error'
-            else:
-                return [(tipo1, tipo2)]
+			return recorrer_funcion(tipo2,tipo1)
         # tipo2 es una variable.
         elif isinstance(tipo2, Var_tipo):
             if tipo1.valor == tipo2.valor:
@@ -78,13 +75,13 @@ def unif(tipo1, tipo2):
         
 	# tipo1 es un entero, unifica consigo mismo.
     if isinstance(tipo1,Int):
-        if isinstance(tipo2,Int): return [(tipo1,tipo2)]
+        if isinstance(tipo2,Int): return []
         else: return 'Error'
         
     
 	# tipo1 es un booleano, unifica consigo mismo
     if isinstance(tipo1,Bool):
-        if isinstance(tipo2,Bool): return [(tipo1,tipo2)]
+        if isinstance(tipo2,Bool): return []
         else: return 'Error'
       
         # tipo1 es una funcion y tipo2 es una funcion.
@@ -98,3 +95,36 @@ def unif(tipo1, tipo2):
         elif isinstance(tipo2, Bool) or isinstance(tipo2,Int):
             return unif(tipo2,tipo1)
         
+
+def recorrer_funcion(tipo1, tipo2):
+	if isinstance(tipo1, Tipo_Funcion):
+		if isinstance(tipo1.T1,Tipo_Funcion):
+			return recorrer_funcion(tipo1.T1,tipo2)
+	
+	
+	
+	
+	
+	
+	
+	
+	
+		if tipo2.valor == tipo1.T1.valor
+                return 'Error'
+            else:
+                recorrer_funcion(tipo1.T2,tipo2)
+	elseif isinstance(tipo1,Var_tipo):
+		if isinstance(tipo2,Var_tipo):
+			if tipo2.valor == tipo1.valor: return 'Error'
+			else: [(tipo1,tipo2)]
+		else: [(tipo1,tipo2)]
+	elseif isinstance(tipo1,Bool):
+		if isinstance(tipo2,Bool): return []
+		elseif isinstance(tipo2,Int) : return 'Error'
+		
+	elseif isinstance(tipo1,Int):
+		if isinstance(tipo2,Int): return []
+		else return 'Error'
+	
+		
+		
