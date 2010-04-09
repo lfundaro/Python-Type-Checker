@@ -84,6 +84,7 @@ def unif(tipo1, tipo2):
         if isinstance(tipo1, Var_tipo):
             # tipo2 es una funcion.
             if isinstance(tipo2, Tipo_Funcion):
+                # Aqui va el occurs check
                 if tipo1.valor == tipo2.T1.valor:
                     raise UnifErr(tipo1, tipo2)
                 else:
@@ -100,7 +101,7 @@ def unif(tipo1, tipo2):
         
         # tipo1 es un entero, unifica consigo mismo.
         if isinstance(tipo1,Int):
-            if isinstance(tipo2,Int): return []
+            if isinstance(tipo2,Int): return [()]
             else: 
                 if isinstance(tipo2, Bool):
                     raise UnifErr(tipo1, tipo2)
@@ -110,8 +111,9 @@ def unif(tipo1, tipo2):
     
         # tipo1 es un booleano, unifica consigo mismo
         if isinstance(tipo1,Bool):
-            if isinstance(tipo2,Bool): return []
-            elif isinstance(tipo2, Var_tipo): return unif(tipo2,tipo1)
+            if isinstance(tipo2,Bool): return [()]
+            elif isinstance(tipo2, Var_tipo): 
+                return unif(tipo2,tipo1)
             else: raise UnifErr(tipo1, tipo2)
         
         # tipo1 es una funcion y tipo2 es una funcion.
@@ -168,7 +170,7 @@ def asigTipo(Amb, E, T):
     elif isinstance(E, Aplicar):
         a = Var_tipo('a')
         s1 = asigTipo(Amb, E.Exp2, a)
-        return componer(s1, asigTipo(Amb, E.Exp1, sustituir(s1, Tipo_Funcion(a, T))))
+        return componer(s1, asigTipo(Amb, E.Exp1, Tipo_Funcion(sustituir(s1, a),T)))
 
 def imprimir(lista):
     acorchete = '['
