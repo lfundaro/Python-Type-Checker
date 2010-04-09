@@ -2,6 +2,7 @@
 
 from Tipos import *
 from Expresiones import *
+from Excepciones import *
 
 def sustituir(lista,T):
     for i in lista:
@@ -52,79 +53,100 @@ def componer(s1, s2):
     return resultado
 
 def unif(tipo1, tipo2):
+    try:
+        # tipo1 entre parentesis.
+        if isinstance(tipo1, Tipo_parent): return unif(tipo1.T1,tipo2)
 	
-    # tipo1 entre parentesis.
-    if isinstance(tipo1, Tipo_parent): return unif(tipo1.T1,tipo2)
-	
-    # tipo2 entre parentesis.
-    if isinstance(tipo2, Tipo_parent): return unif(tipo1,tipo2.T1)
+        # tipo2 entre parentesis.
+        if isinstance(tipo2, Tipo_parent): return unif(tipo1,tipo2.T1)
     
-    # tipo1 es variable.
-    if isinstance(tipo1, Var_tipo):
-        # tipo2 es una funcion.
-        if isinstance(tipo2, Tipo_Funcion):
-			return recorrer_funcion(tipo2,tipo1)
-        # tipo2 es una variable.
-        elif isinstance(tipo2, Var_tipo):
-            if tipo1.valor == tipo2.valor:
-                return ()
-            else:
-                return (tipo1, tipo2)
-        # tipo2 es un entero o booleano.
-        else: return [(tipo1, tipo2)]
-        
-	# tipo1 es un entero, unifica consigo mismo.
-    if isinstance(tipo1,Int):
-        if isinstance(tipo2,Int): return []
-        else: return 'Error'
-        
-    
-	# tipo1 es un booleano, unifica consigo mismo
-    if isinstance(tipo1,Bool):
-        if isinstance(tipo2,Bool): return []
-        else: return 'Error'
-      
-        # tipo1 es una funcion y tipo2 es una funcion.
-    if isinstance(tipo1, Tipo_Funcion): 
-        if isinstance(tipo2, Tipo_Funcion):
-            w = unif(tipo1.T1, tipo2.T1)
-            resultado = componer([w], unif(sustituir([w], tipo1.T2), sustituir([w], tipo2.T2)))
-            return resultado
-        elif isinstance(tipo2, Var_tipo):
-            return unif(tipo2, tipo1)
-        elif isinstance(tipo2, Bool) or isinstance(tipo2,Int):
-            return unif(tipo2,tipo1)
-        
+        # tipo1 es variable.
+        if isinstance(tipo1, Var_tipo):
+            # tipo2 es una funcion.
+            if isinstance(tipo2, Tipo_Funcion):
+                if tipo1.valor == tipo2.T1.valor:
+                    raise UnifErr(tipo1, tipo2)
+                else:
+                    return [(tipo1, tipo2)]
+            # tipo2 es una variable.
+            elif isinstance(tipo2, Var_tipo):
+                if tipo1.valor == tipo2.valor:
+                    return ()
+                else:
+                    return (tipo1, tipo2)
 
-def recorrer_funcion(tipo1, tipo2):
-	if isinstance(tipo1, Tipo_Funcion):
-		if isinstance(tipo1.T1,Tipo_Funcion):
-			return recorrer_funcion(tipo1.T1,tipo2)
-	
-	
-	
-	
-	
-	
-	
-	
-	
-		if tipo2.valor == tipo1.T1.valor
-                return 'Error'
-            else:
-                recorrer_funcion(tipo1.T2,tipo2)
-	elseif isinstance(tipo1,Var_tipo):
-		if isinstance(tipo2,Var_tipo):
-			if tipo2.valor == tipo1.valor: return 'Error'
-			else: [(tipo1,tipo2)]
-		else: [(tipo1,tipo2)]
-	elseif isinstance(tipo1,Bool):
-		if isinstance(tipo2,Bool): return []
-		elseif isinstance(tipo2,Int) : return 'Error'
-		
-	elseif isinstance(tipo1,Int):
-		if isinstance(tipo2,Int): return []
-		else return 'Error'
-	
-		
-		
+            # tipo2 es un entero o booleano.
+            else: return [(tipo1,tipo2)]
+        
+        # tipo1 es un entero, unifica consigo mismo.
+        if isinstance(tipo1,Int):
+            if isinstance(tipo2,Int): return []
+            else: 
+                if isinstance(tipo2, Bool):
+                    raise UnifErr(tipo1, tipo2)
+                else:
+                    return unif(tipo2, tipo1)
+        
+    
+        # tipo1 es un booleano, unifica consigo mismo
+        if isinstance(tipo1,Bool):
+            if isinstance(tipo2,Bool): return []
+            else: raise UnifErr(tipo1, tipo2)
+        
+        # tipo1 es una funcion y tipo2 es una funcion.
+        if isinstance(tipo1, Tipo_Funcion): 
+            if isinstance(tipo2, Tipo_Funcion):
+                w = unif(tipo1.T1, tipo2.T1)
+                resultado = componer([w], unif(sustituir([w], tipo1.T2), sustituir([w], tipo2.T2)))
+                return resultado
+            elif isinstance(tipo2, Var_tipo):
+                return unif(tipo2, tipo1)
+            elif isinstance(tipo2, Bool) or isinstance(tipo2,Int):
+                return unif(tipo2,tipo1)
+
+    except UnifErr, e:
+        tipo1 = e.tipo1
+        tipo2 = e.tipo2
+        print 'Error de unificacion entre ' + str(tipo1) + ' y ' + str(tipo2)
+
+
+def vacio():
+    raise AmbienteVacio("Variable no encontrada")
+
+Vacio = lambda x: vacio()
+extender = lambda tupla,Amb: lambda x: x == tupla[0].valor and tupla[1] or Amb(x)
+
+def asigTipo(Amb, E, T):
+    if isinstance(E, Entero):
+        return unif(T, Int())
+    elif isinstance(E, Booleano):
+        return unif(T, Bool())
+    elif isinstance(E, Var):
+        try:
+            return unif(T, Amb(E.valor))
+        except AmbienteVacio, e:
+            print e.messg
+    elif isinstance(E, Suma):
+        s1 = asigTipo(Amb, E.Exp1, Int())
+        s2 = componer(s1, asigTipo(Amb, E.Exp2, Int()))
+        return componer(s2, unif(T, Int()))
+    elif isinstance(E, Menor):
+        s1 = asigTipo(Amb, E.Exp1, Int())
+        s2 = componer(s1, asigTipo(Amb, E.Exp2, Int()))
+        return componer(s2, unif(T, Bool()))
+    elif isinstance(E, Conjuncion):
+        s1 = asigTipo(Amb, E.Exp1, Bool())
+        s2 = componer(s1, asigTipo(Amb, E.Exp2, Bool()))
+        return componer(s2, unif(T, Bool()))
+    elif isinstance(E, Lambda):
+        Amb1 = extender((Var('x'), Var_tipo('a')), Amb)
+        a = Var_tipo('a')
+        b = Var_tipo('b')
+        s1 = asigTipo(Amb1, E, b)
+        return componer(s1, unif(T, sustituir(s1, Tipo_Funcion(Var_tipo('a'), Var_tipo('b')))))
+    elif isinstance(E, Aplicar):
+        a = Var_tipo('a')
+        s1 = asigTipo(Amb, E.Exp2, a)
+        return componer(s1, asigTipo(Amb, E.Exp1, sustituir(s1, Tipo_Funcion(a, T))))
+
+>>>>>>> 9078f83cb2c2cb4f2e5dc8f2cd1bc18948adaace
