@@ -8,3 +8,8 @@ class UnifErr(Exception):
     def __init__(self, tipo1, tipo2):
         self.tipo1 = tipo1
         self.tipo2 = tipo2
+
+class OccursCheck(Exception):
+    def __init__(self, messg):
+        self.messg = messg
+    
