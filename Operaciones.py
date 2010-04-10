@@ -61,22 +61,23 @@ def unif(tipo1, tipo2):
         if isinstance(tipo2, Tipo_parent): return unif(tipo1,tipo2.T1)
     
         # tipo1 es variable.
-        if isinstance(tipo1, Var_tipo):
-            # tipo2 es una funcion.
-            if isinstance(tipo2, Tipo_Funcion):
-                if tipo1.valor == tipo2.T1.valor:
-                    raise UnifErr(tipo1, tipo2)
-                else:
-                    return [(tipo1, tipo2)]
+        if isinstance(tipo1, Var_tipo): return[(tipo1,tipo2)]
+        
+			# tipo2 es una funcion.
+            # if isinstance(tipo2, Tipo_Funcion):
+            #    if tipo1.valor == tipo2.T1.valor:
+            #        raise UnifErr(tipo1, tipo2)
+            #    else:
+            #        return [(tipo1, tipo2)]
             # tipo2 es una variable.
-            elif isinstance(tipo2, Var_tipo):
-                if tipo1.valor == tipo2.valor:
-                    return ()
-                else:
-                    return (tipo1, tipo2)
+            #elif isinstance(tipo2, Var_tipo):
+            #    if tipo1.valor == tipo2.valor:
+            #        return ()
+            #    else:
+            #        return (tipo1, tipo2)
 
             # tipo2 es un entero o booleano.
-            else: return [(tipo1,tipo2)]
+            #else: return [(tipo1,tipo2)]
         
         # tipo1 es un entero, unifica consigo mismo.
         if isinstance(tipo1,Int):
@@ -91,8 +92,12 @@ def unif(tipo1, tipo2):
         # tipo1 es un booleano, unifica consigo mismo
         if isinstance(tipo1,Bool):
             if isinstance(tipo2,Bool): return []
-            else: raise UnifErr(tipo1, tipo2)
-        
+            else: 
+				if isinstance(tipo2,Int):
+					raise UnifErr(tipo1, tipo2)
+				else:
+					return unif(tipo2,tipo1)
+					
         # tipo1 es una funcion y tipo2 es una funcion.
         if isinstance(tipo1, Tipo_Funcion): 
             if isinstance(tipo2, Tipo_Funcion):
@@ -148,5 +153,3 @@ def asigTipo(Amb, E, T):
         a = Var_tipo('a')
         s1 = asigTipo(Amb, E.Exp2, a)
         return componer(s1, asigTipo(Amb, E.Exp1, sustituir(s1, Tipo_Funcion(a, T))))
-
->>>>>>> 9078f83cb2c2cb4f2e5dc8f2cd1bc18948adaace
