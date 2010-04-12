@@ -1,0 +1,56 @@
+Este documento sirve de ayuda para probar la función
+asignación.
+
+A continuación algunos detalles sobre cómo construir 
+expresiones y tipos.
+
+#####################
+# Sobre Expresiones #
+#####################
+
+En el archivo Expresiones.py se exhibe una jerarquía 
+de clases. Se crea la clase base llamada Expresión
+de la cual derivan todos los tipos de expresiones 
+del lenguaje. 
+Para crear una expresiones se escribe en cónsola el 
+constructor y los argumentos (de ser necesario). Ejemplo:
+Entero(5) Crear un objeto Expresión de tipo Entero con valor 5.
+
+
+###############
+# Sobre Tipos #
+###############
+
+Los tipos se encuentran en el archivo Tipos.py. Al igual 
+que con las expresiones, se decidió crear una jerarquía 
+de clases de donde derivan los demás tipos. 
+Un ejemplo de cómo crear un tipo función procede de la 
+siguiente manera.
+Queremos crear el tipo a --> b 
+Tipo_Funcion(Var_tipo('a'), Var_tipo('b')
+
+#############################
+# ¿Cómo cargar el ambiente? #
+#############################
+
+En el archivo cargar.py se muestra un ejemplo de como se 
+puede extender el ambiente comenzando con un ambiente vacío.
+También hay una prueba de asigTipo donde se realiza una suma.
+
+#####################################################
+# Cómo imprimir la lista de tuplas (Var_tipo, tipo) #
+#####################################################
+
+Se provee de la función imprimir que recibe como único 
+argumento una lista de tuplas (Var_tipo, tipo).
+
+#######################################################
+# ¿Cómo cargar el ambiente de funciones del proyecto? #
+#######################################################
+
+Desde una consola de python se escribe lo siguiente:
+
+from Operaciones import *
+
+Basta con escribir la instrucción anterior para 
+probar el verificador de tipos.

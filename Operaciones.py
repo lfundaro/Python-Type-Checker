@@ -8,12 +8,9 @@ from Excepciones import *
 # [(var de tipo, tipo),...] y un tipo T 
 # y devuelve un tipo.
 def sustituir(lista,T):
-#    try:
     for i in lista:
         T = sustituir_aux(i, T)
-    return T
- #   except TypeError:
-  #      print 'Error de Tipos'
+        return T
     
 
 # Funcion auxiliar que se utiliza para sustituir
@@ -81,23 +78,7 @@ def unif(tipo1, tipo2):
         if isinstance(tipo2, Tipo_parent): return unif(tipo1,tipo2.T1)
     
         # tipo1 es variable.
-<<<<<<< HEAD
         if isinstance(tipo1, Var_tipo): return[(tipo1,tipo2)]
-        
-			# tipo2 es una funcion.
-            # if isinstance(tipo2, Tipo_Funcion):
-            #    if tipo1.valor == tipo2.T1.valor:
-            #        raise UnifErr(tipo1, tipo2)
-            #    else:
-            #        return [(tipo1, tipo2)]
-            # tipo2 es una variable.
-            #elif isinstance(tipo2, Var_tipo):
-            #    if tipo1.valor == tipo2.valor:
-            #        return ()
-            #    else:
-            #        return (tipo1, tipo2)
-            # tipo2 es un entero o booleano.
-            #else: return [(tipo1,tipo2)]
         
         # tipo1 es un entero, unifica consigo mismo.
         if isinstance(tipo1,Int):
@@ -111,12 +92,12 @@ def unif(tipo1, tipo2):
     
         # tipo1 es un booleano, unifica consigo mismo
         if isinstance(tipo1,Bool):
-            if isinstance(tipo2,Bool): return []
+            if isinstance(tipo2,Bool): return [()]
             else: 
-				if isinstance(tipo2,Int):
-					raise UnifErr(tipo1, tipo2)
-				else:
-					return unif(tipo2,tipo1)
+                if isinstance(tipo2,Int):
+                    raise UnifErr(tipo1, tipo2)
+                else:
+                    return unif(tipo2,tipo1)
 					
         # tipo1 es una funcion y tipo2 es una funcion.
         if isinstance(tipo1, Tipo_Funcion): 
@@ -135,10 +116,15 @@ def unif(tipo1, tipo2):
         print 'Error de unificacion entre ' + str(tipo1) + ' y ' + str(tipo2)
 
 
+# Funcion que se utiliza para levantar una excepcion 
+# dentro de un lambda
 def vacio():
     raise AmbienteVacio("Variable no encontrada")
 
+# Ambiente Vacio
 Vacio = lambda x: vacio()
+
+# Operacion para extender un Ambiente
 extender = lambda tupla,Amb: lambda x: x == tupla[0].valor and tupla[1] or Amb(x)
 
 def asigTipo(Amb, E, T):
